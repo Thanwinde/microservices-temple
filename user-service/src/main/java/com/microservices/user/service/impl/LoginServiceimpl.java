@@ -2,6 +2,7 @@ package com.microservices.user.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.microservices.api.client.Module1Client;
 import com.microservices.common.constant.ResultStatue;
 import com.microservices.user.mapper.UserMapper;
 import com.microservices.user.pojo.dto.LoginFormDTO;
@@ -24,6 +25,8 @@ public class LoginServiceimpl extends ServiceImpl<UserMapper,User> implements Lo
 
     public final RedisTemplate redisTemplate;
 
+    public final Module1Client module1Client;
+
     @Override
     public Result<String> login(LoginFormDTO loginForm) {
         User user = lambdaQuery().eq(User::getUsername,loginForm.getUsername()).one();
@@ -31,7 +34,7 @@ public class LoginServiceimpl extends ServiceImpl<UserMapper,User> implements Lo
             return new Result(ResultStatue.ERROR,"无此用户!",null);
         }
         if(user.getPassword().equals(loginForm.getPassword())){
-            String token = jwtTool.createToken(user.getId(), Duration.ofMinutes(10L));
+            String token = jwtTool.createToken(user.getId(), Duration.ofDays(10L));
             return new Result(ResultStatue.SUCCESS,"成功",token);
         }
         return new Result(ResultStatue.ERROR,"成功",null);
@@ -43,6 +46,7 @@ public class LoginServiceimpl extends ServiceImpl<UserMapper,User> implements Lo
         if(user == null){
             return new Result(ResultStatue.ERROR,"无此用户!",null);
         }
+        module1Client.showUser(new Result(ResultStatue.SUCCESS,"成功",user));
         return new Result(ResultStatue.SUCCESS,"成功",user);
     }
 }

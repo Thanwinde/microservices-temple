@@ -15,6 +15,7 @@
         <module>module2-service</module>
         <module>gateway-service</module>
         <module>common</module>
+        <module>client-api</module>
     </modules>
     <properties>
         <java.version>11</java.version>
@@ -44,10 +45,9 @@
     <dependencies>
 
     </dependencies>
-
+<!--所有要被继承的依赖均在dependencyManagement中-->
     <dependencyManagement>
         <dependencies>
-
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -55,6 +55,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!--lombok-->
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
