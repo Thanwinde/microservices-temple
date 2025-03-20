@@ -2,6 +2,7 @@ package com.microservices.module1.controller;
 
 import com.microservices.common.constant.ResultStatue;
 import com.microservices.common.pojo.dto.Result;
+import com.microservices.common.util.UserContext;
 import com.microservices.module1.pojo.entity.User;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class module1Controller {
     @PostMapping("/show")
     public void showUser(@RequestBody Result result) {
+        System.out.println("当前用户:" + UserContext.getUserId());
         System.out.println(result);
         //return new Result(ResultStatue.SUCCESS,"Hello!",result);
     }

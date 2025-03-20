@@ -1,56 +1,10 @@
 server:
   port: 8081
-spring:
-  application:
-    name: user-service
-  profiles:
-    active: dev
-  datasource:
-    url: jdbc:mysql://${db.host}:${db.port:3306}/${db.database}?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${db.user}
-    password: ${db.pw}
-  redis:
-    database: 0
-    host: 192.168.247.133
-    port: 6379
-    password: 123456
-    lettuce:
-      pool:
-        max-active: 10
-        max-idle: 10
-        min-idle: 1
-        time-between-eviction-runs: 10s
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 192.168.247.133:8848
-mybatis-plus:
-  configuration:
-    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
-  global-config:
-    db-config:
-      update-strategy: not_null
-      id-type: auto
-logging:
-  level:
-    com.microservices: debug
-  pattern:
-    dateformat: HH:mm:ss:SSS
-  file:
-    path: "logs/${spring.application.name}"
-knife4j:
-  enable: true
-  openapi:
-    title: 通用用户接口文档
-    description: "通用用户接口文档"
-    email: thanwinde@outlook.com
-    concat: TWind
-    url: https://github.com/Thanwinde
-    version: v1.0.0
-    group:
-      default:
-        group-name: default
-        api-rule: package
-        api-rule-resources:
-          - com.microservices.user.controller
+#spring:
+#  application:
+#    name: user-service
+#  profiles:
+#    active: dev
+feign:
+  okhttp:
+    enabled: true # 开启OKHttp连接池支持

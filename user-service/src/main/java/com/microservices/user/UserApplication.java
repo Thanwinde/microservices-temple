@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @MapperScan("com.microservices.user.mapper")
-@EnableFeignClients(basePackages = "com.microservices.api")
+@EnableFeignClients(basePackages = "com.microservices.api",defaultConfiguration = com.microservices.api.config.OpenFeignConfig.class)
 @SpringBootApplication
 public class UserApplication {
     public static void main(String[] args) {

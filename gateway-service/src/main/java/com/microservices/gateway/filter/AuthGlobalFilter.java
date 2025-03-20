@@ -58,6 +58,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
                 .mutate()
                 .header("user-id", id)  // 添加新的请求头
                 .build();
+        log.info("已添加user-id请求头:{}",id);
         return chain.filter(exchange.mutate().request(modifiedRequest).build());
     }
 

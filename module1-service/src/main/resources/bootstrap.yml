@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: module1-service # 服务名称
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      server-addr: 192.168.247.133:8848 # nacos地址
+      config:
+        group: DEFAULT_GROUP
+        file-extension: yml # 文件后缀名
+        shared-configs: # 共享配置
+          - dataId: shared-swagger.yml # 共享日志配置
+          - dataId: shared-database.yml
+          - dataId: shared-log.yml
+

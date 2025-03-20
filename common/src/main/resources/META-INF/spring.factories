@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.microservices.common.config.RedisConfig
+  com.microservices.common.config.RedisConfig,\
+  com.microservices.common.config.MVCConfig
