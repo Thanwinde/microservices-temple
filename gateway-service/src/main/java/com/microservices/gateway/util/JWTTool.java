@@ -56,6 +56,11 @@ public class JWTTool {
         return new KeyPair(publicKey1,privateKey1);
     }
 
+    @PostConstruct
+    public void init(){
+        this.jwtSigner = JWTSignerUtil.createSigner("rs256", generateKeyPair());
+    }
+
     public String createToken(Long userId, Duration ttl) {
         //生成jwt
         this.jwtSigner = JWTSignerUtil.createSigner("rs256", generateKeyPair());

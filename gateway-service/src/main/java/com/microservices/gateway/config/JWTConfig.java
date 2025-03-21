@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix = "rsa")
-@RefreshScope
 @Data
 public class JWTConfig {
     private String publicKey;

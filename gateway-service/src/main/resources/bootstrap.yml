@@ -1,8 +1,8 @@
 spring:
   application:
-    name: gateway # 服务名称
+    name: gateway-service # 服务名称
   profiles:
-    active: dev
+    active: dev,rsa
   cloud:
     nacos:
       server-addr: 192.168.247.133:8848 # nacos地址

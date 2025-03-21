@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -50,6 +51,11 @@ public class JWTTool {
         }
 
         return new KeyPair(publicKey1,privateKey1);
+    }
+
+    @PostConstruct
+    public void init(){
+        this.jwtSigner = JWTSignerUtil.createSigner("rs256", generateKeyPair());
     }
 
     public String createToken(Long userId, Duration ttl) {
