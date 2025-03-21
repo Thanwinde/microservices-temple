@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
+//允许链式调用.set().set()这种
 @TableName("user")
 public class User implements Serializable {
 

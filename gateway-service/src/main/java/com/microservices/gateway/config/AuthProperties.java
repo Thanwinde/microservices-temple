@@ -11,8 +11,6 @@ import java.util.List;
 @Configuration
 @ConfigurationProperties("filter")
 public class AuthProperties {
-    //@Value("${filter.includePaths}")
-    //private List<String> includePaths;
     private List<String> excludePaths;
 }
 

@@ -12,6 +12,7 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 @Configuration
 @AutoConfigureBefore(RedisAutoConfiguration.class)
 @ConditionalOnMissingBean(name = "redisTemplate")
+//把序列器全部改成jackson
 public class RedisConfig {
     @Bean
     public RedisTemplate redisTemplate(RedisConnectionFactory redisConnectionFactory){

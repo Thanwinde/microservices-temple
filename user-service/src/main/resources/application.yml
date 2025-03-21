@@ -1,5 +1,6 @@
 server:
   port: 8081
+#在bootstrap配了
 #spring:
 #  application:
 #    name: user-service

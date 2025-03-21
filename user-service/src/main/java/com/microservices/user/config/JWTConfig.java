@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @ConfigurationProperties(prefix = "rsa")
+//可热更新
 public class JWTConfig {
     private String publicKey;
     private String privateKey;

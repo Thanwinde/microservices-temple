@@ -10,6 +10,7 @@ db:
     port: 6379
     database: 0
     pw: 123456
+#关于数据库的配置
 swagger:
   title: 用户接口文档
   description: 用户接口文档

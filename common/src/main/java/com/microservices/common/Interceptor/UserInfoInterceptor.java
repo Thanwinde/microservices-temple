@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class UserInfoInterceptor implements HandlerInterceptor {
     @Override
+    //先于方法执行
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String userid = request.getHeader("user-id");
         if(userid != null) {
@@ -20,6 +21,7 @@ public class UserInfoInterceptor implements HandlerInterceptor {
     }
 
     @Override
+    //在执行完之后执行
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         UserContext.removeUserId();
     }
