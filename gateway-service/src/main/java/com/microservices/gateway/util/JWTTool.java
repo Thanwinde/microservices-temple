@@ -5,8 +5,12 @@ import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTValidator;
 import cn.hutool.jwt.signers.JWTSigner;
 import cn.hutool.jwt.signers.JWTSignerUtil;
+import com.microservices.gateway.config.JWTConfig;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -20,18 +24,17 @@ import java.util.Date;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class JWTTool {
-    @Value("${rsa.privateKey}")
-    String privateKey;
-    @Value("${rsa.publicKey}")
-    String publicKey;
+
+    private final JWTConfig jwtConfig;
 
     private JWTSigner jwtSigner;
 
     public KeyPair generateKeyPair(){
-        byte[] bytePublicKey = Base64.getDecoder().decode(publicKey);
+        byte[] bytePublicKey = Base64.getDecoder().decode(jwtConfig.getPublicKey());
 
-        byte[] bytePrivateKey = Base64.getDecoder().decode(privateKey);
+        byte[] bytePrivateKey = Base64.getDecoder().decode(jwtConfig.getPrivateKey());
 
         X509EncodedKeySpec X509keySpec = new X509EncodedKeySpec(bytePublicKey);
 
@@ -53,16 +56,9 @@ public class JWTTool {
         return new KeyPair(publicKey1,privateKey1);
     }
 
-    public JWTTool() {
-
-    }
-    @PostConstruct
-    public void init(){
-        this.jwtSigner = JWTSignerUtil.createSigner("rs256", generateKeyPair());
-    }
-
     public String createToken(Long userId, Duration ttl) {
         //生成jwt
+        this.jwtSigner = JWTSignerUtil.createSigner("rs256", generateKeyPair());
         return JWT.create()
                 .setPayload("user", userId)
                 .setExpiresAt(new Date(System.currentTimeMillis() + ttl.toMillis()))
@@ -70,6 +66,12 @@ public class JWTTool {
                 .sign();
     }
 
+    /**
+     * 解析token
+     *
+     * @param token token
+     * @return 解析刷新token得到的用户信息
+     */
     public Long parseToken(String token) {
         // 1.校验token是否为空
         if (token == null) {
@@ -102,7 +104,7 @@ public class JWTTool {
 
         // 5.数据解析
         try {
-           return Long.valueOf(userPayload.toString());
+            return Long.valueOf(userPayload.toString());
         } catch (RuntimeException e) {
             // 数据格式有误
             throw new ValidateException("无效的token");

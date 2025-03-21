@@ -5,11 +5,11 @@ import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTValidator;
 import cn.hutool.jwt.signers.JWTSigner;
 import cn.hutool.jwt.signers.JWTSignerUtil;
+import com.microservices.user.config.JWTConfig;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -20,18 +20,17 @@ import java.util.Date;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class JWTTool {
-    @Value("${rsa.privateKey}")
-    String privateKey;
-    @Value("${rsa.publicKey}")
-    String publicKey;
+
+    private final JWTConfig jwtConfig;
 
     private JWTSigner jwtSigner;
 
     public KeyPair generateKeyPair(){
-        byte[] bytePublicKey = Base64.getDecoder().decode(publicKey);
+        byte[] bytePublicKey = Base64.getDecoder().decode(jwtConfig.getPublicKey());
 
-        byte[] bytePrivateKey = Base64.getDecoder().decode(privateKey);
+        byte[] bytePrivateKey = Base64.getDecoder().decode(jwtConfig.getPrivateKey());
 
         X509EncodedKeySpec X509keySpec = new X509EncodedKeySpec(bytePublicKey);
 
@@ -53,16 +52,9 @@ public class JWTTool {
         return new KeyPair(publicKey1,privateKey1);
     }
 
-    public JWTTool() {
-
-    }
-    @PostConstruct
-    public void init(){
-        this.jwtSigner = JWTSignerUtil.createSigner("rs256", generateKeyPair());
-    }
-
     public String createToken(Long userId, Duration ttl) {
         //生成jwt
+        this.jwtSigner = JWTSignerUtil.createSigner("rs256", generateKeyPair());
         return JWT.create()
                 .setPayload("user", userId)
                 .setExpiresAt(new Date(System.currentTimeMillis() + ttl.toMillis()))
