@@ -4,6 +4,11 @@ spring:
   profiles:
     active: dev,rsa # 激活的配置文件
   cloud:
+    sentinel:
+      transport:
+        dashboard: 192.168.247.133:8858
+      http-method-specify: true
+      #这会在sentinel的簇点上加上请求类型
     nacos:
       server-addr: 192.168.247.133:8848 # nacos地址
       config:
@@ -14,3 +19,4 @@ spring:
           - dataId: shared-swagger.yml
           - dataId: shared-database.yml
           - dataId: shared-log.yml
+          - dataId: shared-seata.yml

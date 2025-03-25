@@ -12,7 +12,6 @@
     <modules>
         <module>user-service</module>
         <module>module1-service</module>
-        <module>module2-service</module>
         <module>gateway-service</module>
         <module>common</module>
         <module>client-api</module>

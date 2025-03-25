@@ -9,4 +9,6 @@ public interface LoginService extends IService<User> {
     Result login(LoginFormDTO loginForm);
 
     Result checkLogin(String username);
+
+    void testTransactional();
 }

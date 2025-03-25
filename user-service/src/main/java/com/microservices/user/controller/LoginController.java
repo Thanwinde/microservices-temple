@@ -1,9 +1,7 @@
 package com.microservices.user.controller;
 
-
-import com.alibaba.nacos.shaded.org.checkerframework.checker.units.qual.A;
 import com.microservices.common.constant.ResultStatue;
-import com.microservices.user.config.TestConfig;
+import com.microservices.user.config.TestHotUpdateConfig;
 import com.microservices.user.pojo.dto.LoginFormDTO;
 import com.microservices.common.pojo.dto.Result;
 import com.microservices.user.service.LoginService;
@@ -23,7 +21,7 @@ public class LoginController {
     private final LoginService loginService;
 
     @Autowired
-    private TestConfig testConfig;
+    private TestHotUpdateConfig testHotUpdateConfig;
 
     @ApiOperation("登录")
     @PostMapping("/login")
@@ -36,8 +34,20 @@ public class LoginController {
         return loginService.checkLogin(username);
     }
 
-    @GetMapping("/test")
-    public Result test() {
-        return new Result(ResultStatue.SUCCESS,"test",testConfig.getA());
+    @ApiOperation("获取登录消息")
+    @GetMapping("/get")
+    public Result CheakLogin1(@RequestParam String username) {
+        return loginService.checkLogin(username);
+    }
+
+    @GetMapping("/testHotUpdate")
+    public Result testHotUpdate() {
+        return new Result(ResultStatue.SUCCESS,"测试热更新",testHotUpdateConfig.getA());
+    }
+
+    @GetMapping("/testTransactional")
+    public Result testTransactional() {
+        loginService.testTransactional();
+        return new Result(ResultStatue.SUCCESS,"测试分布事务","OK");
     }
 }

@@ -11,4 +11,5 @@ import org.springframework.stereotype.Component;
 public class JWTConfig {
     private String publicKey;
     private String privateKey;
+    //从nacos拉取密钥文件
 }

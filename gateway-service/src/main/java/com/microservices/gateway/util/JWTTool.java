@@ -8,9 +8,6 @@ import cn.hutool.jwt.signers.JWTSignerUtil;
 import com.microservices.gateway.config.JWTConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -28,17 +25,23 @@ import java.util.Date;
 public class JWTTool {
 
     private final JWTConfig jwtConfig;
+    //获取jwt配置(公钥，密钥)
 
     private JWTSigner jwtSigner;
+    //获取jwt签名，签名是jwt的基石
 
     public KeyPair generateKeyPair(){
         byte[] bytePublicKey = Base64.getDecoder().decode(jwtConfig.getPublicKey());
 
         byte[] bytePrivateKey = Base64.getDecoder().decode(jwtConfig.getPrivateKey());
 
+        //把公钥私钥转成字节码
+
         X509EncodedKeySpec X509keySpec = new X509EncodedKeySpec(bytePublicKey);
 
         PKCS8EncodedKeySpec PKCS8keySpec = new PKCS8EncodedKeySpec(bytePrivateKey);
+
+        //采用不同的加密算法进行加密
 
         PublicKey publicKey1 = null;
         PrivateKey privateKey1 = null;
@@ -48,21 +51,24 @@ public class JWTTool {
             publicKey1 = keyFactory.generatePublic(X509keySpec);
 
             privateKey1 = keyFactory.generatePrivate(PKCS8keySpec);
+            //尝试生成公钥私钥对象
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             log.error("JWT生成出错:" + e.getMessage());
             throw new RuntimeException(e);
         }
 
         return new KeyPair(publicKey1,privateKey1);
+        //返回处理好的公私钥对象
     }
 
     @PostConstruct
     public void init(){
         this.jwtSigner = JWTSignerUtil.createSigner("rs256", generateKeyPair());
     }
+    //初始化，先生成签名对象
 
     public String createToken(Long userId, Duration ttl) {
-        //生成jwt
+        //构造jwt
         this.jwtSigner = JWTSignerUtil.createSigner("rs256", generateKeyPair());
         return JWT.create()
                 .setPayload("user", userId)

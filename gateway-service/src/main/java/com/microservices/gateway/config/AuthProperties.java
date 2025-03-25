@@ -12,5 +12,6 @@ import java.util.List;
 @ConfigurationProperties("filter")
 public class AuthProperties {
     private List<String> excludePaths;
+    //会从nacos拉取不过滤api
 }
 

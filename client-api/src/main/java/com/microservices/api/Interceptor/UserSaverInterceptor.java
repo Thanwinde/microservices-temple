@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class UserSaverInterceptor implements RequestInterceptor {
+    //openfeign的拦截器方法，方法名必须是apply
     public void apply(RequestTemplate template) {
         log.info("UserSaverInterceptor apply");
         String userId = UserContext.getUserId();

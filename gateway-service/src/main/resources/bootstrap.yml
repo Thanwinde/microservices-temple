@@ -10,5 +10,5 @@ spring:
         group: DEFAULT_GROUP
         file-extension: yml # 文件后缀名
         shared-configs: # 共享配置
-          - dataId: private-route.yml
-          - dataId: shared-log.yml
+          - dataId: private-route.yml #路由表
+          - dataId: shared-log.yml  #log配置

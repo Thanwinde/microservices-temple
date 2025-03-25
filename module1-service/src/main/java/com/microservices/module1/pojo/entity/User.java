@@ -12,8 +12,9 @@ import java.time.LocalDateTime;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
+//不调用父类的equals和hashcode方法
 @Accessors(chain = true)
-//允许链式调用.set().set()这种
+//允许链式调用
 @TableName("user")
 public class User implements Serializable {
 

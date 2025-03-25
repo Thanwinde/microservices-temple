@@ -49,6 +49,7 @@ public class DynamicRouteListener {
                     public void receiveConfigInfo(String s) {
                         updateConfigInfo(s);
                     }
+                    //nacos返回的路由表是一个json
                 }
         );
         updateConfigInfo(config);

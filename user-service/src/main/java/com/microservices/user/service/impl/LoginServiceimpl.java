@@ -10,7 +10,9 @@ import com.microservices.common.pojo.dto.Result;
 import com.microservices.user.pojo.entity.User;
 import com.microservices.user.service.LoginService;
 import com.microservices.user.util.JWTTool;
+import io.seata.spring.annotation.GlobalTransactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,9 @@ import java.time.Duration;
 
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
+@GlobalTransactional
 public class LoginServiceimpl extends ServiceImpl<UserMapper,User> implements LoginService {
 
     public final JWTTool jwtTool;
@@ -48,5 +52,11 @@ public class LoginServiceimpl extends ServiceImpl<UserMapper,User> implements Lo
         }
         module1Client.showUser(new Result(ResultStatue.SUCCESS,"成功",user));
         return new Result(ResultStatue.SUCCESS,"成功",user);
+    }
+
+    @Override
+    public void testTransactional() {
+        log.info("事务开始");
+        module1Client.testTransactional();
     }
 }

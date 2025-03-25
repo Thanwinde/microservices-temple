@@ -1,2 +1,10 @@
 server:
   port: 8080
+spring:
+  cloud:
+    sentinel:
+      eager: true
+#这会让sentinel在启动时立刻初始化
+      transport:
+        dashboard: 192.168.247.133:8858
+#sentinel地址

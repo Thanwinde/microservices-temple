@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8083
 #spring:
 #  application:
 #    name: module1-service
@@ -8,3 +8,6 @@ server:
 feign:
   okhttp:
     enabled: true # 开启OKHttp连接池支持
+  sentinel:
+    enabled: true # 开启feign对sentinel的支持
+

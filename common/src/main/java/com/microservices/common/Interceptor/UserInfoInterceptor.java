@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
+//MVC的拦截器，实现接到外来请求时记录下user-id
 public class UserInfoInterceptor implements HandlerInterceptor {
     @Override
     //先于方法执行
