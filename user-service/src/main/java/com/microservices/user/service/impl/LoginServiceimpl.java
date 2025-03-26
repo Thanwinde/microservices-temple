@@ -13,12 +13,15 @@ import com.microservices.user.util.JWTTool;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.time.Duration;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -84,6 +87,21 @@ public class LoginServiceimpl extends ServiceImpl<UserMapper,User> implements Lo
             executorService.submit(() -> retrySendingMessage(text, 3));
         }
     }
+
+    @Override
+    public void testDeadMsg(String text) {
+        rabbitTemplate.convertAndSend("test.exchange1", "5mm", text);
+    }
+
+    @Override
+    public void testReConsume(String text,String id) {
+        MessageProperties messageProperties = new MessageProperties();
+        messageProperties.setMessageId(id);
+        messageProperties.setContentEncoding("UTF-8");
+        Message message = new Message(text.getBytes(), messageProperties);
+        rabbitTemplate.convertAndSend("test.exchange2", "5mm", message);
+    }
+
     private void retrySendingMessage(String text, int maxAttempts) {
         int attempts = 0;
         boolean sent = false;

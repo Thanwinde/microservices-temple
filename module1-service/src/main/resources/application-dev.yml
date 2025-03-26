@@ -8,8 +8,9 @@ db:
   redis:
     host: 192.168.247.133
     port: 6379
-    database: 0
+    database: 1
     pw: 123456
+
 swagger:
   title: module1接口文档
   description: module1接口文档

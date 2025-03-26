@@ -56,4 +56,16 @@ public class LoginController {
         loginService.testMessageQueue(text);
         return new Result(ResultStatue.SUCCESS,"测试消息队列","OK");
     }
+
+    @PostMapping("/testDeadMsg")
+    public Result testDeadMsg(String text) {
+        loginService.testDeadMsg(text);
+        return new Result(ResultStatue.SUCCESS,"测试死信","OK");
+    }
+
+    @PostMapping("/testReConsume")
+    public Result testReConsume(String text,String id) {
+        loginService.testReConsume(text,id);
+        return new Result(ResultStatue.SUCCESS,"测试阻止重复消费,id:" + id,"OK");
+    }
 }

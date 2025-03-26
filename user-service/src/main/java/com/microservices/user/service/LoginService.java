@@ -13,4 +13,8 @@ public interface LoginService extends IService<User> {
     void testTransactional();
 
     void testMessageQueue(String text);
+
+    void testDeadMsg(String text);
+
+    void testReConsume(String text,String id);
 }

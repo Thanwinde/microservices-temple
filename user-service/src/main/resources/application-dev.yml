@@ -8,7 +8,7 @@ db:
   redis:
     host: 192.168.247.133
     port: 6379
-    database: 0
+    database: 1
     pw: 123456
 #关于数据库的配置
 swagger:

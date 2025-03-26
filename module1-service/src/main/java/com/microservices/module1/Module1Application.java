@@ -21,7 +21,6 @@ public class Module1Application {
         //使用jackson作为序列化器
         Jackson2JsonMessageConverter messageConverter = new Jackson2JsonMessageConverter();
         //在每次发送消息时都会生成消息id便于跟踪
-        messageConverter.setCreateMessageIds(true);
         return messageConverter;
     }
 
