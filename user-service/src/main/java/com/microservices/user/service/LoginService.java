@@ -11,4 +11,6 @@ public interface LoginService extends IService<User> {
     Result checkLogin(String username);
 
     void testTransactional();
+
+    void testMessageQueue(String text);
 }

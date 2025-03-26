@@ -19,4 +19,4 @@ spring:
           - dataId: shared-database.yml # 数据库配置
           - dataId: shared-log.yml # 日志配置
           - dataId: shared-seata.yml # seata配置
-
+          - dataId: shared-rabbitMQ.yml #rabbitMQ配置

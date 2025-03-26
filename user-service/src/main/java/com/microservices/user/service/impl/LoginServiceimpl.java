@@ -13,10 +13,14 @@ import com.microservices.user.util.JWTTool;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.time.Duration;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 @Service
@@ -30,6 +34,15 @@ public class LoginServiceimpl extends ServiceImpl<UserMapper,User> implements Lo
     public final RedisTemplate redisTemplate;
 
     public final Module1Client module1Client;
+
+    public final RabbitTemplate rabbitTemplate;
+
+    private ExecutorService executorService;
+    //线程池
+    @PostConstruct
+    public void init() {
+        this.executorService = Executors.newFixedThreadPool(10);
+    }
 
     @Override
     public Result<String> login(LoginFormDTO loginForm) {
@@ -58,5 +71,41 @@ public class LoginServiceimpl extends ServiceImpl<UserMapper,User> implements Lo
     public void testTransactional() {
         log.info("事务开始");
         module1Client.testTransactional();
+    }
+
+    @Override
+    public void testMessageQueue(String text) {
+        log.info("生产者尝试发出消息:{}",text);
+        try {
+            rabbitTemplate.convertAndSend("test.exchange", "5mm", text);
+        }catch (Exception e){
+            log.error("消息发送失败, 启动重试线程: {}", e.getMessage());
+            // 启动一个新的线程来处理重试逻辑
+            executorService.submit(() -> retrySendingMessage(text, 3));
+        }
+    }
+    private void retrySendingMessage(String text, int maxAttempts) {
+        int attempts = 0;
+        boolean sent = false;
+        while (attempts < maxAttempts && !sent) {
+            try {
+                // 尝试发送消息
+                rabbitTemplate.convertAndSend("test.exchange", "5mm", text);
+                log.info("消息发送成功: {}", text);
+                sent = true; // 发送成功，退出循环
+            } catch (Exception e) {
+                attempts++;
+                log.error("消息发送失败，第{}次重试: {}", attempts, e.getMessage());
+                if (attempts == maxAttempts) {
+                    log.error("消息发送失败，已尝试{}次，放弃发送", maxAttempts);
+                }
+                try {
+                    // 等待一段时间再重试，避免频繁重试
+                    Thread.sleep(1000); // 等待1秒
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
     }
 }

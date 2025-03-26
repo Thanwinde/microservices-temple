@@ -1,8 +1,11 @@
 package com.microservices.module1;
 
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 @EnableFeignClients(basePackages = "com.microservices.api",defaultConfiguration = com.microservices.api.config.OpenFeignConfig.class)
@@ -11,4 +14,15 @@ public class Module1Application {
     public static void main(String[] args) {
         SpringApplication.run(Module1Application.class, args);
     }
+
+    @Bean
+    //设置消息队列的序列化器
+    public MessageConverter messageConverter() {
+        //使用jackson作为序列化器
+        Jackson2JsonMessageConverter messageConverter = new Jackson2JsonMessageConverter();
+        //在每次发送消息时都会生成消息id便于跟踪
+        messageConverter.setCreateMessageIds(true);
+        return messageConverter;
+    }
+
 }

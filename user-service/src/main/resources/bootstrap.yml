@@ -16,7 +16,8 @@ spring:
         file-extension: yml # 文件后缀名
         refresh-enabled: true
         shared-configs: # 共享配置
-          - dataId: shared-swagger.yml
-          - dataId: shared-database.yml
-          - dataId: shared-log.yml
-          - dataId: shared-seata.yml
+          - dataId: shared-swagger.yml # 共享日志配置
+          - dataId: shared-database.yml # 数据库配置
+          - dataId: shared-log.yml # 日志配置
+          - dataId: shared-seata.yml # seata配置
+          - dataId: shared-rabbitMQ.yml #rabbitMQ配置

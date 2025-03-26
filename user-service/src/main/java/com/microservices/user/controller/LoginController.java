@@ -50,4 +50,10 @@ public class LoginController {
         loginService.testTransactional();
         return new Result(ResultStatue.SUCCESS,"测试分布事务","OK");
     }
+
+    @PostMapping("/testMessageQueue")
+    public Result testMessageQueue(String text) {
+        loginService.testMessageQueue(text);
+        return new Result(ResultStatue.SUCCESS,"测试消息队列","OK");
+    }
 }
