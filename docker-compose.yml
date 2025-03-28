@@ -1,0 +1,27 @@
+services:
+  gateway:
+    container_name: gateway-service
+    image: gateway-service:1.0
+    ports:
+      - 8080:8080
+    networks:
+      - my-net
+  user-service:
+    container_name: user-service
+    image: user-service:1.0
+    ports:
+      - 8081:8081
+    networks:
+      - my-net
+  module1-service:
+    container_name: module1-service
+    image: module1-service:1.0
+    ports:
+      - 8083:8083
+    networks:
+      - my-net
+
+networks:
+  my-net:
+    external:
+      true
