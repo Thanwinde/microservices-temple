@@ -35,7 +35,9 @@ public class TestListener {
     }
 
     @RabbitListener(bindings = @QueueBinding(
-            value = @Queue(name = "test.queue1",durable = "true",arguments = @Argument(name = "x-queue-mode",value = "lazy")),
+            value = @Queue(name = "test.queue1",durable = "true", arguments = {
+                    @Argument(name = "x-queue-mode",value = "lazy") //lazy队列会直接把信息存到硬盘，相对稳定
+            }),
             exchange = @Exchange(name = "test.exchange1",type = ExchangeTypes.DIRECT),
             key = "5mm"
     ))
@@ -46,13 +48,12 @@ public class TestListener {
 
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue(name = "test.queue2", durable = "true", arguments = {
-                    @Argument(name = "x-dead-letter-exchange", value = "test.ReError"), // 添加x-dead-letter-exchange参数
-                    @Argument(name = "x-dead-letter-routing-key",value ="ReError")
+                    @Argument(name = "x-dead-letter-exchange", value = "test.ReError"), // 手动指定死信机
+                    @Argument(name = "x-dead-letter-routing-key",value ="ReError")  // 手动指定死信队列，优先级高于全局死机
             }),
             exchange = @Exchange(name = "test.exchange2", type = ExchangeTypes.DIRECT),
             key = "5mm"
     ))
-
     public void testReConsume(Message msg){
         String id = msg.getMessageProperties().getMessageId();
         Object a = redisTemplate.opsForValue().get("ConsumedMsg:" + id);
@@ -63,5 +64,16 @@ public class TestListener {
         }else{
             log.info("信息已处理过！,id:{}",id);
         }
+    }
+
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(name = "test.delayQueue", durable = "true", arguments = {
+                    @Argument(name = "x-queue-mode",value = "lazy")
+            }),
+            exchange = @Exchange(name = "test.delayExchange",delayed = "true", type = ExchangeTypes.DIRECT),//设置成延时交换机
+            key = "5mm"
+    ))
+    public void delayExchange(String text){
+        log.info("延时队列收到消息：:{}",text);
     }
 }

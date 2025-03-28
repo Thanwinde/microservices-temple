@@ -17,4 +17,6 @@ public interface LoginService extends IService<User> {
     void testDeadMsg(String text);
 
     void testReConsume(String text,String id);
+
+    void delayQueue(String text);
 }

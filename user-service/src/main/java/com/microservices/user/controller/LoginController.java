@@ -68,4 +68,10 @@ public class LoginController {
         loginService.testReConsume(text,id);
         return new Result(ResultStatue.SUCCESS,"测试阻止重复消费,id:" + id,"OK");
     }
+
+    @PostMapping("/delayQueue")
+    public Result delayQueue(String text) {
+        loginService.delayQueue(text);
+        return new Result(ResultStatue.SUCCESS,"测试延迟队列","OK");
+    }
 }

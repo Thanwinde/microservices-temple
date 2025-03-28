@@ -102,6 +102,16 @@ public class LoginServiceimpl extends ServiceImpl<UserMapper,User> implements Lo
         rabbitTemplate.convertAndSend("test.exchange2", "5mm", message);
     }
 
+    @Override
+    public void delayQueue(String text) {
+        MessageProperties messageProperties = new MessageProperties();
+        messageProperties.setContentEncoding("UTF-8");
+        messageProperties.setDelay(5000);//延时5秒
+        Message message = new Message(text.getBytes(), messageProperties);
+        log.info("发送延时队列，延时五秒");
+        rabbitTemplate.convertAndSend("test.delayExchange", "5mm", message);
+    }
+
     private void retrySendingMessage(String text, int maxAttempts) {
         int attempts = 0;
         boolean sent = false;
