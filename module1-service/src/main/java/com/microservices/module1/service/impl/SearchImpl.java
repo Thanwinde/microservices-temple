@@ -24,6 +24,9 @@ import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.aggregations.metrics.Avg;
+import org.elasticsearch.search.aggregations.metrics.Max;
+import org.elasticsearch.search.aggregations.metrics.Min;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.stereotype.Service;
 
@@ -64,7 +67,11 @@ public class SearchImpl implements Search {
         boolQueryBuilder.must(QueryBuilders.matchQuery("name", text));
         request.source().query(boolQueryBuilder).size(0);
         request.source().aggregation(AggregationBuilders.terms(field + "_agg").field(field).size(10)
-                .subAggregation("max_price",AggregationBuilders.max("max_price").field("price"))   );
+                .subAggregation(AggregationBuilders.max("max_price").field("price"))
+                .subAggregation(AggregationBuilders.avg("avg_price").field("price"))
+                .subAggregation(AggregationBuilders.min("min_price").field("price"))
+                //添加Metric子聚合，列如最大值，平均值之类的
+        );
 
 
         //聚合搜索
@@ -73,10 +80,17 @@ public class SearchImpl implements Search {
         Terms terms = aggregations.get(field + "_agg");
         List<? extends Terms.Bucket> buckets = terms.getBuckets();
         JSONArray jsonArray = new JSONArray();
+        //处理聚合结果
         for (Terms.Bucket bucket : buckets) {
             JSONObject te = new JSONObject();
+            Max maxPrice = bucket.getAggregations().get("max_price");
+            Min minPrice = bucket.getAggregations().get("min_price");
+            Avg avgPrice = bucket.getAggregations().get("avg_price");
             te.put("name", bucket.getKeyAsString());
             te.put("value", bucket.getDocCount());
+            te.put("max_price", maxPrice.getValue());
+            te.put("min_price", minPrice.getValue());
+            te.put("avg_price", avgPrice.getValue());
             jsonArray.add(te);
         }
         return new Result(ResultStatue.SUCCESS,"分类结果",jsonArray);
